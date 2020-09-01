@@ -173,13 +173,13 @@
         <StackPanel Margin="20, 20, 20,20">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
                 <Image Source="/OpenRPA;component/Resources/open_rpa_white.png" Width="40" Height="40"  />
-                <TextBlock FontSize="40"
+                <TextBlock FontSize="36"
                    FontFamily="Bauhaus 93"
-                   Foreground="White"
+                   Foreground="Blue"
                    Margin="10"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
-                   Text="OpenRPA">
+                   Text="SynergRPA">
                     <TextBlock.Effect>
                         <DropShadowEffect Color="Black" />
                     </TextBlock.Effect>
@@ -190,7 +190,7 @@
                                    DockPanel.Dock="Bottom" Background="Transparent" BorderThickness="0" Style="{DynamicResource BusyIndicatorStyle1}" >
                 <WPFTool:BusyIndicator.BusyContentTemplate>
                     <DataTemplate>
-                        <TextBlock FontSize="20" TextTrimming="None"
+                        <TextBlock FontSize="14" TextTrimming="None"
                    FontFamily="Bauhaus 93"
                    Foreground="White"
                    VerticalAlignment="Center"
