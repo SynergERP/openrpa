@@ -37,33 +37,31 @@
 
 
     <Property Id="INSTALLOFFICEFEATURE" Value="TRUE" />
-	<!--Change source path-->
+
+    <WixVariable Id="MainSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="MainSource2" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NativeMessagingHost\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="OfficeSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Office\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="FormsSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Forms\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="IESource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.IE\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="NMSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.NM\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="ImageSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Image\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="JavaSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Java\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="ScriptSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Script\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.AviRecorder\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.OpenFlowDB\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.RDServicePlugin\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.FileWatcher\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Elis.Rossum\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="PDPluginSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.PDPlugin\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Utilities\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="UpdaterSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Updater\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="DatabaseSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.Database\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="SAPSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.SAP\bin\PrepInstaller\$(var.netver)"/>
+    <WixVariable Id="MSSpeechSource" Overridable="yes" Value="c:\Code\OpenRPA\OpenRPA.MSSpeech\bin\PrepInstaller\$(var.netver)"/>
+    
 
 
-	  <WixVariable Id="MainSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="MainSource2" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="OfficeSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="FormsSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="IESource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="NMSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="ImageSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="JavaSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="ScriptSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="AviRecorderSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="OpenFlowDBSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="RDServicePluginSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="FileWatcherSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="ElisRossumSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="PDPluginSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="UtilitiesSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="UpdaterSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="DatabaseSource" Overridable="yes" Value="C:\Code\dll"/>
-    <WixVariable Id="SAPSource" Overridable="yes" Value="C:\Code\dll"/>
-	  
-
-
-
-	  <Feature Id="MainFeature" Title="OpenRPA Core Components" Level="1" Absent='disallow' AllowAdvertise='no' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
+    <Feature Id="MainFeature" Title="OpenRPA Core Components" Level="1" Absent='disallow' AllowAdvertise='no' ConfigurableDirectory='INSTALLDIR' TypicalDefault="install" >
       <!--  Display="hidden" -->
       <ComponentGroupRef Id="MainComponents" />
       <ComponentGroupRef Id="UtilitiesComponents" />
@@ -97,6 +95,9 @@
     </Feature>
     <Feature Id="DatabaseFeature" Title="Microsoft ADO/Database Integration" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="DatabaseComponents" />
+    </Feature>
+    <Feature Id="MSSpeechFeature" Title="Microsoft speech recognition and speech synthesis" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+      <ComponentGroupRef Id="MSSpeechComponents" />
     </Feature>
     <Feature Id="SAPFeature" Title="SAP NetWeaver Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="SAPComponents" />

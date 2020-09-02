@@ -578,6 +578,8 @@ namespace OpenRPA
         {
             Log.FunctionIndent("RobotInstance", "init");
             SetStatus("Checking for updates");
+            Config.Save();
+            SetStatus("Checking for updates");
             _ = CheckForUpdatesAsync();
             try
             {
@@ -821,7 +823,9 @@ namespace OpenRPA
                                 {
                                     try
                                     {
+                                        Log.Debug("Create SigninWindow " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                         var signinWindow = new Views.SigninWindow(url, true);
+                                        Log.Debug("ShowDialog " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                         signinWindow.ShowDialog();
                                         jwt = signinWindow.jwt;
                                         if (!string.IsNullOrEmpty(jwt))
@@ -838,6 +842,7 @@ namespace OpenRPA
                                         }
                                         else
                                         {
+                                            Log.Debug("Call close " + string.Format("{0:mm\\:ss\\.fff}", sw.Elapsed));
                                             Close();
                                         }
 
@@ -1047,6 +1052,12 @@ namespace OpenRPA
                     if (workflow == null) throw new ArgumentException("Unknown workflow " + command.workflowid);
                     lock (statelock)
                     {
+                        if (!Config.local.remote_allowed)
+                        {
+                            // Don't fail, just say busy and let the message expire
+                            // so if this was send to a robot in a role, another robot can pick this up.
+                            e.isBusy = true; return;
+                        }
                         int RunningCount = 0;
                         int RemoteRunningCount = 0;
                         foreach (var i in WorkflowInstance.Instances.ToList())

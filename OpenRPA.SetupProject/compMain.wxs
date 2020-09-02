@@ -197,6 +197,11 @@
         <File Id="fil126FD8D7BC3CA134C631C10414C0844C" Source="!(wix.MainSource)\ru\OpenRPA.Windows.resources.dll" />
         <File Id="fil746AB0109F6368FE0AE56C2FA8C44711" Source="!(wix.MainSource)\ru\Xceed.Wpf.AvalonDock.resources.dll" />
       </Component>
+      <Component Id='mainComponentja' Win64='yes' Directory="mainja" Guid='{A0C9CC00-7B62-4296-8E8B-9F14C0BEA6B6}'>
+        <File Id="A0C9CC007B6242968E8B9F14C0BEA6B6" Source="!(wix.MainSource)\ja\OpenRPA.resources.dll" />
+        <File Id="DEB91C7224B2421EB67FE7ED8D99978A" Source="!(wix.MainSource)\ja\OpenRPA.Interfaces.resources.dll" />
+        <File Id="E4DA92091EB045328D402CA5EA4F24F7" Source="!(wix.MainSource)\ja\OpenRPA.Windows.resources.dll" />
+      </Component>
       <Component Id='mainComponentx64' Win64='yes' Directory="mainx64" Guid='{225DF59C-8C11-4AFF-95A9-88A98A6CD576}'>
         <File Id="filB436E4594E3544C098B9943DBDC1A518" Source="!(wix.MainSource)\x64\cef.pak" />
         <File Id="filCB052B4928C8DBE2730D9A211E470208" Source="!(wix.MainSource)\x64\CefSharp.BrowserSubprocess.Core.dll" />
@@ -217,7 +222,7 @@
         <File Id="fil323CAEE6BB05F64F185321F5B2E40B68" Source="!(wix.MainSource)\x64\libcef.dll" />
         <File Id="filAD78B91DA97E98FE6AF8DD9B80F98B22" Source="!(wix.MainSource)\x64\libEGL.dll" />
         <File Id="fil37B200E9C3DCCC4F10FC43F9BEC63A0F" Source="!(wix.MainSource)\x64\libGLESv2.dll" />
-        <File Id="fil4E634A3E360C3A8A8E07F98A66B10343" Source="!(wix.MainSource)\x64\natives_blob.bin" />
+        <!--<File Id="fil4E634A3E360C3A8A8E07F98A66B10343" Source="!(wix.MainSource)\x64\natives_blob.bin" />-->
         <File Id="fil9ACC4265158BEE28AC5D12597C532D84" Source="!(wix.MainSource)\x64\README.txt" />
         <File Id="fil171EB7F3B881DFD880449D01AB09ECA1" Source="!(wix.MainSource)\x64\snapshot_blob.bin" />
         <File Id="fil9CFD5D2CAB69A2A827A1756C5C77ACD3" Source="!(wix.MainSource)\x64\v8_context_snapshot.bin" />
@@ -250,6 +255,8 @@
       </Directory>
       <Directory Id="mainru" Name="ru">
       </Directory>
+      <Directory Id="mainja" Name="ja">
+      </Directory>    
     </DirectoryRef>
 
   </Fragment>
