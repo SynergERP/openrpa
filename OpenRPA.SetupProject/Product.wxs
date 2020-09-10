@@ -129,7 +129,7 @@
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="$(var.UpgradeCode)" Feature="MainFeature">
         <Shortcut Id="ApplicationStartMenuShortcut"
-                  Name="OpenRPA"
+                  Name="SynergRPA"
                   Description="SynergRPA"
                   Target="[#openrpaExe]"
                   WorkingDirectory="INSTALLDIR"/>
