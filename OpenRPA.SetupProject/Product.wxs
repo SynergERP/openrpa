@@ -99,9 +99,9 @@
     <Feature Id="MSSpeechFeature" Title="Microsoft speech recognition and speech synthesis" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="MSSpeechComponents" />
     </Feature>
-    <Feature Id="SAPFeature" Title="SAP NetWeaver Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
+    <!--<Feature Id="SAPFeature" Title="SAP NetWeaver Plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="SAPComponents" />
-    </Feature>
+    </Feature>-->
     <Feature Id="FileWatcherFeature" Title="File Watcher run plugin" Level="1" Absent='allow' AllowAdvertise='yes' ConfigurableDirectory='INSTALLDIR' TypicalDefault="advertise" >
       <ComponentGroupRef Id="FileWatcherComponents" />
     </Feature>
@@ -130,7 +130,7 @@
       <Component Id="ApplicationShortcut" Guid="$(var.UpgradeCode)" Feature="MainFeature">
         <Shortcut Id="ApplicationStartMenuShortcut"
                   Name="OpenRPA"
-                  Description="OpenRPA"
+                  Description="SynergRPA"
                   Target="[#openrpaExe]"
                   WorkingDirectory="INSTALLDIR"/>
         <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
@@ -204,11 +204,11 @@
 
       </Directory>
       <Directory Id="ProgramFiles64Folder">
-        <Directory Id="INSTALLDIR" Name="OpenRPA" />
+        <Directory Id="INSTALLDIR" Name="SynergRPA" />
       </Directory>
 
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="OpenRPA"/>
+        <Directory Id="ApplicationProgramsFolder" Name="SynergRPA"/>
       </Directory>
     </Directory>
 

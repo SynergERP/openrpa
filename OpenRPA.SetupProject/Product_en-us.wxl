@@ -3,7 +3,7 @@
   <String Id="Language">1033</String>
   <!-- Supported language and codepage codes can be found here: http://www.tramontana.co.hu/wix/lesson2.php#2.4 -->
 
-  <String Id="ApplicationName">OpenRPA</String>
+  <String Id="ApplicationName">SynergRPA</String>
   <String Id="ManufacturerName">OpenRPA ApS</String>
   <String Id="ManufacturerFullName">OpenRPA ApS</String>
   <String Id="ProductDescription">Open Source Enterprise RPA solution</String>

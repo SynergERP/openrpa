@@ -2,14 +2,14 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
 
-    <ComponentGroup Id="SAPComponents">
+    <!--<ComponentGroup Id="SAPComponents">
       <Component Id='SAPComponent' Guid='{D7DA4D4F-660D-46B9-BA6F-BD1D8743BD57}' Win64='yes' Directory="INSTALLDIR">
         <File Id="Interop.SAPFEWSELib.dll" Source="!(wix.SAPSource)\Interop.SAPFEWSELib.dll" />
         <File Id="Interop.SapROTWr.dll" Source="!(wix.SAPSource)\Interop.SapROTWr.dll" />
         <File Id="OpenRPA.SAPBridge.exe" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.exe" />
         <File Id="OpenRPA.SAPBridge.exe.config" Source="!(wix.SAPSource)\OpenRPA.SAPBridge.exe.config" />
         <File Id="OpenRPA.SAP.dll" Source="!(wix.SAPSource)\OpenRPA.SAP.dll" />
-      </Component>
+      </Component>-->
       
       <!--<Component Id='SAPComponentde' Win64='yes' Directory="SAPde" Guid='{37484DAA-A9A1-41E0-9C17-16BDC5E83A95}'>
         <File Id="OpenRPA.SAP.resources.dll_de" Source="!(wix.SAPSource)\de\OpenRPA.SAP.resources.dll" />
@@ -30,7 +30,7 @@
         <File Id="OpenRPA.SAP.resources.dll_ru" Source="!(wix.SAPSource)\ru\OpenRPA.SAP.resources.dll" />
       </Component>-->
 
-    </ComponentGroup>
+    <!--</ComponentGroup>-->
     <DirectoryRef Id="INSTALLDIR">
       <Directory Id="SAPde" Name="de">
       </Directory>
