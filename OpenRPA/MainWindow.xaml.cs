@@ -144,11 +144,13 @@ namespace OpenRPA
 
                         if (Config.local.show_getting_started)
                         {
-
+                            var url = Config.local.getting_started_url;
+                            if (string.IsNullOrEmpty(url)) url = "https://openrpa.dk/gettingstarted.html";
+                            if (!string.IsNullOrEmpty(global.openflowconfig.getting_started_url)) url = global.openflowconfig.getting_started_url;
                             LayoutDocument layoutDocument = new LayoutDocument { Title = "Getting started" };
                             layoutDocument.ContentId = "GettingStarted";
                             // Views.GettingStarted view = new Views.GettingStarted(url + "://" + u.Host + "/gettingstarted.html");
-                            Views.GettingStarted view = new Views.GettingStarted("https://openrpa.dk/gettingstarted.html");
+                            Views.GettingStarted view = new Views.GettingStarted(url);
                             layoutDocument.Content = view;
                             MainTabControl.Children.Add(layoutDocument);
                             layoutDocument.IsSelected = true;
@@ -1119,6 +1121,7 @@ namespace OpenRPA
                 Log.Function("MainWindow", "OnPermissions", "Create and show Views.PermissionsWindow");
                 var pw = new Views.PermissionsWindow(result);
                 Hide();
+                pw.Owner = GenericTools.MainWindow;
                 pw.ShowDialog();
                 if (result is Project)
                 {
@@ -1232,7 +1235,7 @@ namespace OpenRPA
                         Log.Information("Loading empty projects are not supported");
                         return;
                     }
-                    project = Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
+                    project = await Project.FromFile(System.IO.Path.Combine(projectpath, name + ".rpaproj"));
                     RobotInstance.instance.Projects.Add(project);
                     project.name = name;
                     project._id = null;
@@ -1699,12 +1702,10 @@ namespace OpenRPA
             }, null);
             Log.FunctionOutdent("MainWindow", "OnOpen");
         }
-
         private void View_onSelectedItemChanged()
         {
             NotifyPropertyChanged("CurrentWorkflow");
         }
-
         private void OnDetectors(object _item)
         {
             Log.FunctionIndent("MainWindow", "OnDetectors");
@@ -2827,7 +2828,7 @@ namespace OpenRPA
                     };
                 }
 
-                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").First();
+                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
                 if(p != null && (all == true || all == false))
                 {
                     p.OnUserAction += OnUserAction;
@@ -2853,7 +2854,7 @@ namespace OpenRPA
                 if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
                 p.Stop();
 
-                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").First();
+                p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
                 if (p != null && (all == true || all == false))
                 {
                     p.OnUserAction -= OnUserAction;
@@ -2902,8 +2903,11 @@ namespace OpenRPA
                 {
                     try
                     {
-                        _overlayWindow.Visible = true;
-                        _overlayWindow.Bounds = e.Element.Rectangle;
+                        if(_overlayWindow!=null)
+                        {
+                            _overlayWindow.Visible = true;
+                            _overlayWindow.Bounds = e.Element.Rectangle;
+                        }
                     }
                     catch (Exception)
                     {
@@ -2991,6 +2995,7 @@ namespace OpenRPA
                             };
                             isRecording = false;
                             InputDriver.Instance.CallNext = true;
+                            win.Owner = this;
                             if (win.ShowDialog() == true)
                             {
                                 e.ClickHandled = true;
@@ -3017,6 +3022,7 @@ namespace OpenRPA
                                 Topmost = true
                             };
                             isRecording = false;
+                            win.Owner = this;
                             if (win.ShowDialog() == true)
                             {
                                 e.a.AddInput(win.Text, e.Element);
@@ -3227,6 +3233,7 @@ namespace OpenRPA
                     Title = "Press New Cancel Key"
                 };
                 Hide();
+                view.Owner = GenericTools.MainWindow;
                 if (view.ShowDialog() == true)
                 {
                     cancelkey.Text = view.Text;
@@ -3518,6 +3525,13 @@ namespace OpenRPA
         private void SearchBox_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (SearchBox.IsDropDownOpen) e.Handled = true;
+        }
+        private void SearchBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (SelectedContent is Views.OpenProject op)
+            {
+                op.FilterText = SearchBox.Text;
+            }
         }
     }
     public class QuickLaunchItem

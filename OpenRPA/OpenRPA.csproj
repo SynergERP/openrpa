@@ -10,8 +10,33 @@
     <Description>Base UI of OpenRPA, used as part of OpenRPA robot</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/open-rpa/openrpa</PackageProjectUrl>
-    <Version>1.0.162</Version>
-    <PackageReleaseNotes>1.0.162 Add OpenRPA.MSSpeech addon
+    <Version>1.1.14</Version>
+    <PackageReleaseNotes>1.1.14 Add support for custom project folder, fix ui thread issue for invoke openrpa
+1.1.13 Various fixes, see commit history, Add support for local robot execution from powershell even when offline
+1.1.12 Fix "cannot select self" on nested windows elements
+1.1.11 Fix JArray parse error / Expose instance as variable / Upgrade CefSharp.Wpf
+1.1.10 Fix issue with importing namespaces when recording_add_to_designer is false
+1.1.9 Various small bug fixes
+1.1.8 Fix initialDirectory for SelectFile
+1.1.7 Quick fix of chrome update to UIElement type
+1.1.6 Fix caseing in nm select item by text
+1.1.5 Fix order in ExpandArchiveDesigner / Fix issue with timeout in nm
+1.1.4 Add CompressArchive and ExpandArchive
+1.1.3 Test rewriting GetElement as async, to support Cancel
+1.1.2 Minor improvements
+1.1.1 Re-Add NuGet Package support - BETA
+1.0.175 Beta: Add PowerShell support
+1.0.174 Test implementation of support for Arabic for readpdf
+1.0.171 Improve pagination for nm, bugfix for office close workbook, add firefox ready addon
+1.0.170 Fix a few issues with argument parsing for invoke openflow. Fix argument mapping UI for Invoke OpenRPA when robot is offline
+1.0.169 Fix excel sheet enumeration bug
+1.0.168 Add passwords for write/read cell, add support for removing password with close workbook, add protect worksheet/unprotect worksheet
+1.0.167 Improve rdservice, add support for running without freerdp as a service
+1.0.166 Add support to update div value
+1.0.165 Load extensions from project folder as well
+1.0.164 Fix selector variables for Open and Close Application
+1.0.163 Fix UTF8 encoding issue with nm extension
+1.0.162 Add OpenRPA.MSSpeech addon
 1.0.161 Add support for multiple file extensions in filter / remove debug from sap / add more ja translations
 1.0.160 Improve error message in invoke openrpa / add option to disable remote invoke with remote_allowed
 1.0.159 Add more ja translations / Add SelectFile Activity / preload all settings from settings.json
@@ -197,10 +222,14 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Include="$(OutputPath)\OpenRPA.exe.config" Pack="true" PackagePath="build" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf" Version="83.4.20" />
+    <PackageReference Include="CefSharp.Wpf" Version="85.3.130" />
     <PackageReference Include="DotNetProjects.Wpf.Toolkit" Version="5.0.43" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NuGet.Common" Version="5.4.0" />
+    <PackageReference Include="NuGet.Packaging" Version="5.4.0" />
+    <PackageReference Include="NuGet.Protocol" Version="5.4.0" />
+    <PackageReference Include="NuGet.Resolver" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Activities\ClickElementDesigner.xaml" />
@@ -431,6 +460,7 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
     <None Remove="Views\InsertText.xaml" />
     <None Remove="Views\KeyboardSeqWindow.xaml" />
     <None Remove="Views\OpenProject.xaml" />
+    <None Remove="Views\PackageManager.xaml" />
     <None Remove="Views\PermissionsWindow.xaml" />
     <None Remove="Views\RecorderPlugins.xaml" />
     <None Remove="Views\RunPlugins.xaml" />
@@ -499,6 +529,9 @@ Add toggle between embedded and locally installed python, Add PipInstall activit
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AgentViewProjects.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PackageManager.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\WorkflowInstances.xaml">

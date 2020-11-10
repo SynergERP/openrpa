@@ -694,8 +694,6 @@ namespace OpenRPA.Views
         }
         public ModelItem AddRecordingActivity(Activity a, IPlugin plugin)
         {
-            if (Config.local.recording_add_to_designer)
-            {
                 var rootObject = GetRootElement();
                 Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
                 if (vbsettings == null)
@@ -756,7 +754,9 @@ namespace OpenRPA.Views
                         });
                 }
                 Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
-                //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
+            //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
+            if (Config.local.recording_add_to_designer)
+            {
                 return AddActivity(a);
             }
             if (recording == null) BeginRecording();
@@ -1184,7 +1184,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 Log.Error(ex.ToString());
             }
         }
-        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations = null;
+        public IDictionary<SourceLocation, System.Activities.Presentation.Debug.BreakpointTypes> BreakpointLocations { get; set; }
         public void OnVisualTracking(IWorkflowInstance Instance, string ActivityId, string ChildActivityId, string State)
         {
             try
@@ -1248,7 +1248,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 Log.Error(ex.ToString());
             }
         }
-        internal void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
+        public void IdleOrComplete(IWorkflowInstance instance, EventArgs e)
         {
 
             if (!string.IsNullOrEmpty(instance.queuename) && !string.IsNullOrEmpty(instance.correlationId))

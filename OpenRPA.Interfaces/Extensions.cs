@@ -37,7 +37,18 @@ namespace OpenRPA.Interfaces
     }
     public static class Extensions
     {
-        
+        public static string Base64Encode(string plainText)
+        {
+            if (string.IsNullOrEmpty(plainText)) plainText = "";
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(string base64EncodedData)
+        {
+            if (string.IsNullOrEmpty(base64EncodedData)) return null;
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
         static public string GetStringFromResource(string resourceName)
         {
             return GetStringFromResource(typeof(Extensions), resourceName);
@@ -112,6 +123,7 @@ namespace OpenRPA.Interfaces
         }
         public static IEnumerable<T> GetMyCustomAttributes<T>(this Type type, bool inherit)
         {
+            if (type == null) return default(IEnumerable<T>);
             return type
                 .GetCustomAttributes(typeof(T), inherit)
                 .Cast<T>();
@@ -219,6 +231,7 @@ namespace OpenRPA.Interfaces
             get
             {
                 var asm = System.Reflection.Assembly.GetEntryAssembly();
+                if (asm == null) asm = System.Reflection.Assembly.GetExecutingAssembly();
                 var filepath = asm.CodeBase.Replace("file:///", "");
                 var path = System.IO.Path.GetDirectoryName(filepath);
                 return path;

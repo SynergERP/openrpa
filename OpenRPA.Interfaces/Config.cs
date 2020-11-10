@@ -26,6 +26,7 @@ namespace OpenRPA
         public string culture { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public string ocrlanguage { get { return GetProperty(null, "eng"); } set { SetProperty(null, value); } }
         public string[] openworkflows { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
+        public string[] files_pending_deletion { get { return GetProperty(null, new string[] { }); } set { SetProperty(null, value); } }
         public System.Drawing.Rectangle mainwindow_position { get { return GetProperty(null, System.Drawing.Rectangle.Empty); } set { SetProperty(null, value); } }
         public string designerlayout { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool record_overlay { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
@@ -60,6 +61,7 @@ namespace OpenRPA
         public int remote_allow_multiple_running_max { get { return GetProperty(null, 2); } set { SetProperty(null, value); } }
         public string cef_useragent { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool show_getting_started { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
+        public string getting_started_url { get { return GetProperty(null, ""); } set { SetProperty(null, value); } }
         public bool notify_on_workflow_remote_start { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool notify_on_workflow_end { get { return GetProperty(null, true); } set { SetProperty(null, value); } }
         public bool notify_on_workflow_remote_end { get { return GetProperty(null, false); } set { SetProperty(null, value); } }
@@ -100,32 +102,40 @@ namespace OpenRPA
             return SecureData;
         }
         private static Config _local = null;
+        public static string SettingsFile
+        {
+            get
+            {
+                string filename = "settings.json";
+                var fi = new System.IO.FileInfo(filename);
+                var _fileName = System.IO.Path.GetFileName(filename);
+                var di = fi.Directory;
+                if (System.IO.File.Exists(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json")))
+                {
+                    filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                }
+                else if (System.IO.File.Exists(filename))
+                {
+                }
+                else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "settings.json")))
+                {
+                    filename = System.IO.Path.Combine(di.Parent.FullName, "settings.json");
+                }
+                else
+                {
+                    // Will create a new file in ProjectsDirectory
+                    filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
+                }
+                return filename;
+            }
+        }
         public static Config local
         {
             get
             {
                 if (_local == null)
                 {
-                    string filename = "settings.json";
-                    var fi = new System.IO.FileInfo(filename);
-                    var _fileName = System.IO.Path.GetFileName(filename);
-                    var di = fi.Directory;
-                    if (System.IO.File.Exists(System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json")))
-                    {
-                            filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
-                    }
-                    else if (System.IO.File.Exists(filename))
-                    {
-                    }
-                    else if (System.IO.File.Exists(System.IO.Path.Combine(di.Parent.FullName, "settings.json")))
-                    {
-                        filename = System.IO.Path.Combine(di.Parent.FullName, "settings.json");
-                    }
-                    else
-                    {
-                        // Will create a new file in ProjectsDirectory
-                        filename = System.IO.Path.Combine(Extensions.ProjectsDirectory, "settings.json");
-                    }
+                    string filename = SettingsFile;
                     _local = new Config();
                     if (System.IO.File.Exists(filename))
                     {
@@ -202,6 +212,7 @@ namespace OpenRPA
                 _ = remote_allowed;
                 _ = cef_useragent;
                 _ = show_getting_started;
+                _ = getting_started_url;
                 _ = notify_on_workflow_remote_start;
                 _ = notify_on_workflow_end;
                 _ = notify_on_workflow_remote_end;
@@ -229,58 +240,69 @@ namespace OpenRPA
         public bool GetRegistryProperty(string propertyname, out object value)
         {
             value = null;
+            try
+            {
+                Microsoft.Win32.RegistryKey rk = null;
+                if (hasLocalMachine == null)
+                {
+                    hasLocalMachine = false;
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                        if (rk != null) hasLocalMachine = true;
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else if (hasLocalMachine == true)
+                {
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                if (rk != null)
+                {
+                    var tempvalue = rk.GetValue(propertyname);
+                    if (tempvalue != null)
+                    {
+                        value = tempvalue;
+                        return true;
+                    }
 
-            Microsoft.Win32.RegistryKey rk = null;
-            if(hasLocalMachine == null)
-            {
-                hasLocalMachine = false;
-                try
-                {
-                    rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-                    if (rk != null) hasLocalMachine = true;
                 }
-                catch (Exception)
+                if (hasCurrentUser == null)
                 {
+                    hasCurrentUser = false;
+                    try
+                    {
+                        rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA", false);
+                        if (rk != null) hasCurrentUser = true;
+                    }
+                    catch (Exception)
+                    {
+                    }
                 }
-            } 
-            else if(hasLocalMachine == true)
-            {
-                rk = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-            }
-            if (rk != null)
-            {
-                var tempvalue = rk.GetValue(propertyname);
-                if (tempvalue != null)
-                {
-                    value = tempvalue;
-                    return true;
-                }
-
-            }
-            if (hasCurrentUser == null)
-            {
-                hasCurrentUser = false;
-                try
+                else if (hasCurrentUser == true)
                 {
                     rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-                    if (rk != null) hasCurrentUser = true;
                 }
-                catch (Exception)
+                if (rk != null)
                 {
+                    var tempvalue = rk.GetValue(propertyname);
+                    if (tempvalue != null)
+                    {
+                        value = tempvalue;
+                        return true;
+                    }
                 }
             }
-            else if (hasCurrentUser == true)
+            catch (Exception)
             {
-                rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\OpenRPA", false);
-            }
-            if (rk != null)
-            {
-                var tempvalue = rk.GetValue(propertyname);
-                if (tempvalue != null)
-                {
-                    value = tempvalue;
-                    return true;
-                }
             }
             return false;
         }
@@ -300,13 +322,13 @@ namespace OpenRPA
                 }
                 else if(propertyName != "properties")
                 {
-                    if (!properties.TryGetValue(pluginname + "_" + propertyName, out value))
+                    if (properties != null && !properties.TryGetValue(pluginname + "_" + propertyName, out value))
                     {
                     }
                 }
                 if (string.IsNullOrEmpty(pluginname) && value == null)
                 {
-                    if (!settings.TryGetValue(propertyName, out value))
+                    if (settings != null && settings.TryGetValue(propertyName, out value))
                     {
                     }
                 }
@@ -389,10 +411,12 @@ namespace OpenRPA
                 }
                 if (string.IsNullOrEmpty(pluginname))
                 {
+                    if (settings == null) settings = new Dictionary<string, object>();
                     settings[propertyName] = newValue;
                 }
                 else
                 {
+                    if (properties == null) properties = new Dictionary<string, object>();
                     properties[pluginname + "_" + propertyName] = newValue;
                     properties = properties;
                 }
