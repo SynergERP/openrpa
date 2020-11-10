@@ -313,7 +313,9 @@ namespace OpenRPA
             }
         }
         public System.Diagnostics.Stopwatch runWatch { get; set; }
-        apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
+        IWorkflow IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
+
+        // apibase IWorkflowInstance.Workflow { get => this.Workflow; set => this.Workflow = value as Workflow; }
         //public void Run(Activity root, string activityid)
 
         public void RunThis(Activity root, Activity activity)
@@ -776,14 +778,29 @@ namespace OpenRPA
         private object filelock = new object();
         public void SaveFile()
         {
-            if (string.IsNullOrEmpty(InstanceId)) return;
-            if (string.IsNullOrEmpty(Path)) return;
-            if (isCompleted || hasError) return;
-            if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
-            var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
-            lock(filelock)
+            try
             {
-                System.IO.File.WriteAllText(Filepath, JsonConvert.SerializeObject(this));
+                if (string.IsNullOrEmpty(InstanceId)) return;
+                if (string.IsNullOrEmpty(Path)) return;
+                if (isCompleted || hasError) return;
+                if (!System.IO.Directory.Exists(System.IO.Path.Combine(Path, "state"))) System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Path, "state"));
+                var Filepath = System.IO.Path.Combine(Path, "state", InstanceId + ".json");
+                string json = "";
+                try
+                {
+                    json = JsonConvert.SerializeObject(this);
+                }
+                catch (Exception)
+                {
+                }
+                lock (filelock)
+                {
+                    if (!string.IsNullOrEmpty(json)) System.IO.File.WriteAllText(Filepath, json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
             }
         }
         public void DeleteFile()

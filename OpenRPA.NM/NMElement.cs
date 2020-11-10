@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace OpenRPA.NM
         public NMElement[] Children {
             get {
                 var result = new List<NMElement>();
-                if (chromeelement.ContainsKey("content"))
+                if (Attributes.ContainsKey("content"))
                 {
-                    if (!(chromeelement["content"] is JArray content)) return result.ToArray();
+                    if (!(Attributes["content"] is JArray content)) return result.ToArray();
                     foreach (var c in content)
                     {
                         try
@@ -68,7 +69,7 @@ namespace OpenRPA.NM
                 
             }
         }
-        private Dictionary<string, object> chromeelement { get; set; }
+        public Dictionary<string, object> Attributes { get; set; }
         public string xpath { get; set; }
         public string cssselector { get; set; }
         public string tagname { get; set; }
@@ -94,16 +95,16 @@ namespace OpenRPA.NM
                 catch (Exception)
                 {
                 }
-                chromeelement = new Dictionary<string, object>();
+                Attributes = new Dictionary<string, object>();
                 if(c!=null)
                     foreach (var kp in c )
                     {
-                        if(chromeelement.ContainsKey(kp.Key.ToLower()))
+                        if(Attributes.ContainsKey(kp.Key.ToLower()))
                         {
-                            chromeelement[kp.Key.ToLower()] = kp.Value;
+                            Attributes[kp.Key.ToLower()] = kp.Value;
                         } else
                         {
-                            chromeelement.Add(kp.Key.ToLower(), kp.Value);
+                            Attributes.Add(kp.Key.ToLower(), kp.Value);
                         }
                         
                     }
@@ -116,22 +117,22 @@ namespace OpenRPA.NM
                 //        chromeelement[a.Key] = a.Value;
                 //    }
                 //}
-                if (chromeelement.ContainsKey("name")) Name = chromeelement["name"].ToString();
-                if (chromeelement.ContainsKey("id")) id = chromeelement["id"].ToString();
-                if (chromeelement.ContainsKey("tagname")) tagname = chromeelement["tagname"].ToString();
-                if (chromeelement.ContainsKey("classname")) classname = chromeelement["classname"].ToString();
-                if (chromeelement.ContainsKey("type")) type = chromeelement["type"].ToString();
-                if (chromeelement.ContainsKey("xpath")) xpath = chromeelement["xpath"].ToString();
-                if (chromeelement.ContainsKey("cssselector")) cssselector = chromeelement["cssselector"].ToString();
-                if (chromeelement.ContainsKey("cssPath")) cssselector = chromeelement["cssPath"].ToString();
-                if (chromeelement.ContainsKey("csspath")) cssselector = chromeelement["csspath"].ToString();
-                if (chromeelement.ContainsKey("zn_id")) zn_id = int.Parse(chromeelement["zn_id"].ToString());
+                if (Attributes.ContainsKey("name")) Name = Attributes["name"].ToString();
+                if (Attributes.ContainsKey("id")) id = Attributes["id"].ToString();
+                if (Attributes.ContainsKey("tagname")) tagname = Attributes["tagname"].ToString();
+                if (Attributes.ContainsKey("classname")) classname = Attributes["classname"].ToString();
+                if (Attributes.ContainsKey("type")) type = Attributes["type"].ToString();
+                if (Attributes.ContainsKey("xpath")) xpath = Attributes["xpath"].ToString();
+                if (Attributes.ContainsKey("cssselector")) cssselector = Attributes["cssselector"].ToString();
+                if (Attributes.ContainsKey("cssPath")) cssselector = Attributes["cssPath"].ToString();
+                if (Attributes.ContainsKey("csspath")) cssselector = Attributes["csspath"].ToString();
+                if (Attributes.ContainsKey("zn_id")) zn_id = int.Parse(Attributes["zn_id"].ToString());
 
-                if (chromeelement.ContainsKey("isvisible")) IsVisible = bool.Parse(chromeelement["isvisible"].ToString());
-                if (chromeelement.ContainsKey("display")) Display = chromeelement["display"].ToString();
-                if (chromeelement.ContainsKey("isvisibleonscreen")) isVisibleOnScreen = bool.Parse(chromeelement["isvisibleonscreen"].ToString());
-                if (chromeelement.ContainsKey("disabled")) Disabled = bool.Parse(chromeelement["disabled"].ToString());
-                if (string.IsNullOrEmpty(Name) && tagname == "OPTION" && chromeelement.ContainsKey("content"))
+                if (Attributes.ContainsKey("isvisible")) IsVisible = bool.Parse(Attributes["isvisible"].ToString());
+                if (Attributes.ContainsKey("display")) Display = Attributes["display"].ToString();
+                if (Attributes.ContainsKey("isvisibleonscreen")) isVisibleOnScreen = bool.Parse(Attributes["isvisibleonscreen"].ToString());
+                if (Attributes.ContainsKey("disabled")) Disabled = bool.Parse(Attributes["disabled"].ToString());
+                if (string.IsNullOrEmpty(Name) && tagname == "OPTION" && Attributes.ContainsKey("content"))
                 {
                     Name = Text;
                 }
@@ -170,16 +171,16 @@ namespace OpenRPA.NM
             {
                 if(!string.IsNullOrEmpty(tagname) && tagname.ToLower() == "select")
                 {
-                    if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
-                    if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                    if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
+                    if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
                 }
-                if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
-                if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
+                if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
                 if(!hasRefreshed)
                 {
                     Refresh();
-                    if (chromeelement.ContainsKey("text")) return chromeelement["text"].ToString();
-                    if (chromeelement.ContainsKey("innertext")) return chromeelement["innertext"].ToString();
+                    if (Attributes.ContainsKey("text")) return Attributes["text"].ToString();
+                    if (Attributes.ContainsKey("innertext")) return Attributes["innertext"].ToString();
                 }
                 return null;
             }
@@ -192,7 +193,7 @@ namespace OpenRPA.NM
                     {
                         foreach (var item in Children)
                         {
-                            if ((!string.IsNullOrEmpty(item.Text) && item.Text.ToLower() == value) || (string.IsNullOrEmpty(item.Text) && string.IsNullOrEmpty(value)))
+                            if ((!string.IsNullOrEmpty(item.Text) && !string.IsNullOrEmpty(value) && item.Text.ToLower() == value.ToLower()) || (string.IsNullOrEmpty(item.Text) && string.IsNullOrEmpty(value)))
                             {
                                 Value = item.Value;
                                 return;
@@ -207,9 +208,9 @@ namespace OpenRPA.NM
             get
             {
                 string[] result = new string[] { };
-                if (chromeelement.ContainsKey("values"))
+                if (Attributes.ContainsKey("values"))
                 {
-                    var json = chromeelement["values"].ToString();
+                    var json = Attributes["values"].ToString();
                     result = JsonConvert.DeserializeObject<string[]>(json);
                 }
                 if(result==null|| result.Length==0)
@@ -240,7 +241,7 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = JsonConvert.SerializeObject(value)
+                        data = Interfaces.Extensions.Base64Encode(JsonConvert.SerializeObject(value))
                     };
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
@@ -253,13 +254,34 @@ namespace OpenRPA.NM
                 }
             }
         }
-        public string Value
+        public string innerHTML
         {
             get
             {
                 string result = null;
-                if (chromeelement.ContainsKey("value")) result = chromeelement["value"].ToString();
-                if (chromeelement.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = chromeelement["innertext"].ToString();
+                if (!Attributes.ContainsKey("innerhtml"))
+                {
+                    var getelement2 = new NativeMessagingMessage("getelement", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId, 
+                        data = "innerhtml"
+                    };
+                    NativeMessagingMessage subsubresult = NMHook.sendMessageResult(getelement2, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed clicking html element");
+                    parseChromeString(subsubresult.result.ToString());
+                    if (Attributes.ContainsKey("innerhtml"))
+                    {
+                        result = Attributes["innerhtml"].ToString();
+                        return result;
+                    }
+
+                }
+                if (Attributes.ContainsKey("innerhtml") && string.IsNullOrEmpty(result)) result = Attributes["innerhtml"].ToString();
+                if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
+                if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
                 if (string.IsNullOrEmpty(result)) result = Text;
                 return result;
             }
@@ -282,11 +304,57 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = value
+                        data = Interfaces.Extensions.Base64Encode(value), result = "innerhtml"
                     };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
                     //System.Threading.Thread.Sleep(500);
+                    if (PluginConfig.wait_for_tab_after_set_value)
+                    {
+                        NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
+                    }
+                    return;
+                }
+            }
+        }
+        public string Value
+        {
+            get
+            {
+                string result = null;
+                if (Attributes.ContainsKey("value")) result = Attributes["value"].ToString();
+                if (Attributes.ContainsKey("innertext") && string.IsNullOrEmpty(result)) result = Attributes["innertext"].ToString();
+                if (string.IsNullOrEmpty(result)) result = Text;
+                return result;
+            }
+            set
+            {
+                if (NMHook.connected)
+                {
+                    var tab = NMHook.tabs.Where(x => x.id == message.tabid).FirstOrDefault();
+                    if (tab == null) throw new ElementNotFoundException("Unknown tabid " + message.tabid);
+                    // NMHook.HighlightTab(tab);
+
+                    var updateelement = new NativeMessagingMessage("updateelementvalue", PluginConfig.debug_console_output, PluginConfig.unique_xpath_ids)
+                    {
+                        browser = message.browser,
+                        //cssPath = cssselector,
+                        //xPath = xpath,
+                        //tabid = message.tabid,
+                        //frameId = message.frameId,
+                        //data = value
+                        zn_id = zn_id,
+                        tabid = message.tabid,
+                        frameId = message.frameId,
+                        data = Interfaces.Extensions.Base64Encode(value),
+                        result = "value"
+                    };
+                    var temp = Interfaces.Extensions.Base64Decode(updateelement.data);
+                    if (value == null) updateelement.data = null;
+                    var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
+                    if (subsubresult == null) throw new Exception("Failed setting html element value");
                     if (PluginConfig.wait_for_tab_after_set_value)
                     {
                         NMHook.WaitForTab(updateelement.tabid, updateelement.browser, TimeSpan.FromSeconds(5));
@@ -505,9 +573,9 @@ namespace OpenRPA.NM
         {
             get
             {
-                if (chromeelement != null)
+                if (Attributes != null)
                 {
-                    if (chromeelement.ContainsKey("href")) return chromeelement["href"].ToString();
+                    if (Attributes.ContainsKey("href")) return Attributes["href"].ToString();
                     return null;
                 }
                 return null;
@@ -518,9 +586,9 @@ namespace OpenRPA.NM
         {
             get
             {
-                if (chromeelement != null)
+                if (Attributes != null)
                 {
-                    if (chromeelement.ContainsKey("src")) return chromeelement["src"].ToString();
+                    if (Attributes.ContainsKey("src")) return Attributes["src"].ToString();
                     return null;
                 }
                 return null;
@@ -531,9 +599,9 @@ namespace OpenRPA.NM
         {
             get
             {
-                if (chromeelement != null)
+                if (Attributes != null)
                 {
-                    if (chromeelement.ContainsKey("alt")) return (string)chromeelement["alt"];
+                    if (Attributes.ContainsKey("alt")) return (string)Attributes["alt"];
                     return null;
                 }
                 return null;
@@ -571,26 +639,37 @@ namespace OpenRPA.NM
         }
         public override bool Equals(object obj)
         {
-            if (obj is NMElement nm)
-            {
-                var eq = new Activities.NMEqualityComparer();
-                return eq.Equals(this, nm);
-            }
-            return base.Equals(obj);
+            //if (obj is NMElement nm)
+            //{
+            //    var eq = new Activities.NMEqualityComparer();
+            //    return eq.Equals(this, nm);
+            //}
+            //return base.Equals(obj);
+            return hashCode == obj.GetHashCode();
         }
+        private int hashCode = 0;
         public override int GetHashCode()
         {
-            int hCode = Height ^ X ^ Y ^ Width;
-            return hCode.GetHashCode();
+            if (hashCode > 0) return hashCode;
+            int hCode = 0;
+
+            if (!string.IsNullOrEmpty(xpath)) hCode += xpath.GetHashCode();
+            if (!string.IsNullOrEmpty(id)) hCode += id.GetHashCode();
+            if (!string.IsNullOrEmpty(cssselector)) hCode += cssselector.GetHashCode();
+            if (!string.IsNullOrEmpty(classname)) hCode += classname.GetHashCode();
+            if (!string.IsNullOrEmpty(Text)) hCode += Text.GetHashCode();
+            if (zn_id > 0) hCode += Convert.ToInt32(zn_id);
+            hashCode = hCode.GetHashCode();
+            return hashCode;
         }
         public bool IsChecked
         {
             get
             {
-                if (chromeelement.ContainsKey("checked"))
+                if (Attributes.ContainsKey("checked"))
                 {
-                    if (chromeelement["checked"].ToString() == "true") return true;
-                    if (chromeelement["checked"].ToString() == "True") return true;
+                    if (Attributes["checked"].ToString() == "true") return true;
+                    if (Attributes["checked"].ToString() == "True") return true;
                 }
                 return false;
             }
@@ -608,7 +687,8 @@ namespace OpenRPA.NM
                         zn_id = zn_id,
                         tabid = message.tabid,
                         frameId = message.frameId,
-                        data = value.ToString()
+                        data = Interfaces.Extensions.Base64Encode(value.ToString()),
+                        result = "value"
                     };
                     var subsubresult = NMHook.sendMessageResult(updateelement, true, PluginConfig.protocol_timeout);
                     if (subsubresult == null) throw new Exception("Failed setting html element value");
