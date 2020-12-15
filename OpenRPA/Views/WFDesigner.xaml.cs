@@ -182,9 +182,26 @@ namespace OpenRPA.Views
             {
                 Task.Run(() =>
                 {
-                    if (Config.local.minimize) GenericTools.Minimize();
-                    System.Threading.Thread.Sleep(2000);
-                    MainWindow.instance.OnRecord(null);
+                    try
+                    {
+                        if (Config.local.minimize) GenericTools.Minimize();
+                        System.Threading.Thread.Sleep(2000);
+                        GenericTools.RunUI(() =>
+                        {
+                            try
+                            {
+                                MainWindow.instance.OnRecord(null);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex.ToString());
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
                 });
             }
             if (e.Key == Key.F5)
@@ -694,66 +711,66 @@ namespace OpenRPA.Views
         }
         public ModelItem AddRecordingActivity(Activity a, IPlugin plugin)
         {
-                var rootObject = GetRootElement();
-                Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
-                if (vbsettings == null)
-                {
-                    vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
+            var rootObject = GetRootElement();
+            Microsoft.VisualBasic.Activities.VisualBasicSettings vbsettings = Microsoft.VisualBasic.Activities.VisualBasic.GetSettings(rootObject);
+            if (vbsettings == null)
+            {
+                vbsettings = new Microsoft.VisualBasic.Activities.VisualBasicSettings();
 
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(TimeSpan).Assembly.GetName().Name,
-                            Import = typeof(TimeSpan).Namespace
-                        });
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(Action).Assembly.GetName().Name,
-                            Import = typeof(Action).Namespace
-                        });
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(System.Xml.XmlNode).Assembly.GetName().Name,
-                            Import = typeof(System.Xml.XmlNode).Namespace
-                        });
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(OpenRPA.UIElement).Assembly.GetName().Name,
-                            Import = typeof(OpenRPA.UIElement).Namespace
-                        });
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(OpenRPA.Workflow).Assembly.GetName().Name,
-                            Import = typeof(OpenRPA.Workflow).Namespace
-                        });
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(System.Data.DataSet).Assembly.GetName().Name,
-                            Import = typeof(System.Data.DataSet).Namespace
-                        });
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = typeof(Microsoft.VisualBasic.Collection).Assembly.GetName().Name,
-                            Import = typeof(Microsoft.VisualBasic.Collection).Namespace
-                        });
-                }
-                if(plugin!=null)
-                {
-                    Type t = plugin.GetType();
-                    vbsettings.ImportReferences.Add(
-                        new Microsoft.VisualBasic.Activities.VisualBasicImportReference
-                        {
-                            Assembly = t.Assembly.GetName().Name,
-                            Import = t.Namespace
-                        });
-                }
-                Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(TimeSpan).Assembly.GetName().Name,
+                        Import = typeof(TimeSpan).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(Action).Assembly.GetName().Name,
+                        Import = typeof(Action).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(System.Xml.XmlNode).Assembly.GetName().Name,
+                        Import = typeof(System.Xml.XmlNode).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(OpenRPA.UIElement).Assembly.GetName().Name,
+                        Import = typeof(OpenRPA.UIElement).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(OpenRPA.Workflow).Assembly.GetName().Name,
+                        Import = typeof(OpenRPA.Workflow).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(System.Data.DataSet).Assembly.GetName().Name,
+                        Import = typeof(System.Data.DataSet).Namespace
+                    });
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = typeof(Microsoft.VisualBasic.Collection).Assembly.GetName().Name,
+                        Import = typeof(Microsoft.VisualBasic.Collection).Namespace
+                    });
+            }
+            if (plugin != null)
+            {
+                Type t = plugin.GetType();
+                vbsettings.ImportReferences.Add(
+                    new Microsoft.VisualBasic.Activities.VisualBasicImportReference
+                    {
+                        Assembly = t.Assembly.GetName().Name,
+                        Import = t.Namespace
+                    });
+            }
+            Microsoft.VisualBasic.Activities.VisualBasic.SetSettings(rootObject, vbsettings);
             //DynamicAssemblyMonitor(t.Assembly.GetName().Name, t.Assembly, true);
             if (Config.local.recording_add_to_designer)
             {
@@ -1717,7 +1734,7 @@ Union(modelService.Find(modelService.Root, typeof(System.Activities.Debugger.Sta
                 {
                     Body = SelectedActivity.GetCurrentValue() as Activity
                 };
-                if(Activities == null)
+                if (Activities == null)
                 {
                     var item = thisselection.PrimarySelection.Parent.Properties["Handler"].SetValue(co);
                 }
