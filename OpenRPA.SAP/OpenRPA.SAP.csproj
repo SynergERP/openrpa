@@ -45,6 +45,10 @@
     <None Include="Resources\open_rpa128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="SAP.GUI.Scripting.net" Version="1.0.0" />
+    <PackageReference Include="SAPAutomation" Version="1.4.0.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\OpenRPA.Interfaces\OpenRPA.Interfaces.csproj" />
     <ProjectReference Include="..\OpenRPA.SAPBridge\OpenRPA.SAPBridge.csproj" />
   </ItemGroup>
